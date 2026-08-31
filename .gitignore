@@ -1,0 +1,33 @@
+# Secrets and machine-local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Local student records and runtime state
+data/**
+!data/.gitkeep
+*.db
+*.db-*
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
+*-wal
+*-shm
+
+# Dependencies, generated output, and temporary files
+node_modules/
+coverage/
+.cache/
+tmp/
+temp/
+*.log
+*.tmp
+*.bak
+.DS_Store
+Thumbs.db
+
+# Accidental zero-byte file left by an earlier shell command
+/\[t

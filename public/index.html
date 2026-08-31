@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="description" content="基于本地 Obsidian 数学知识库的考研一对一辅导工作台">
+  <meta name="theme-color" content="#f3f1e9">
+  <title>研数辅导室</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">跳到主要内容</a>
+
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="主导航">
+      <div class="brand" aria-label="研数辅导室">
+        <span class="brand-mark" aria-hidden="true">∫</span>
+        <span>
+          <strong>研数辅导室</strong>
+          <small>本地知识库工作台</small>
+        </span>
+      </div>
+
+      <nav class="primary-nav">
+        <button class="nav-item is-active" type="button" data-view-target="today" aria-current="page">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 5.5h16v14H4zM8 3v5M16 3v5M4 10h16"/></svg>
+          <span>今日</span>
+        </button>
+        <button class="nav-item" type="button" data-view-target="tutor">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 4h16v13H8l-4 3zM8 9h8M8 13h5"/></svg>
+          <span>辅导室</span>
+        </button>
+        <button class="nav-item" type="button" data-view-target="knowledge">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 5.5A3.5 3.5 0 0 1 7.5 2H20v17H7.5A3.5 3.5 0 0 0 4 22zM4 5.5A3.5 3.5 0 0 0 7.5 9H20"/></svg>
+          <span>知识库</span>
+        </button>
+        <button class="nav-item" type="button" data-view-target="mistakes">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-3-6 3zM9 8h6M9 12h4"/></svg>
+          <span>错题本</span>
+        </button>
+        <button class="nav-item" type="button" data-view-target="profile">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></svg>
+          <span>档案</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-foot">
+        <div class="mode-card" id="sidebar-mode-card">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span>
+            <strong id="sidebar-mode-label">正在连接</strong>
+            <small id="sidebar-mode-detail">读取本地知识库</small>
+          </span>
+        </div>
+        <p>教材正文来自 OCR 初稿，关键公式请对照原页。</p>
+      </div>
+    </aside>
+
+    <div class="workspace">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow" id="page-kicker">学习总览</p>
+          <h1 id="page-title">今日</h1>
+        </div>
+        <div class="topbar-actions">
+          <span class="connection-pill" id="connection-pill" role="status">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span id="connection-label">连接中</span>
+          </span>
+          <button class="icon-button" id="theme-toggle" type="button" aria-label="切换到深色模式" title="切换主题">
+            <svg class="theme-sun" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.5"/><path d="M12 2v3M12 19v3M4.9 4.9 7 7M17 17l2.1 2.1M2 12h3M19 12h3M4.9 19.1 7 17M17 7l2.1-2.1"/></svg>
+            <svg class="theme-moon" aria-hidden="true" viewBox="0 0 24 24"><path d="M20 15.5A8.5 8.5 0 0 1 8.5 4 8.5 8.5 0 1 0 20 15.5z"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <main id="main-content" tabindex="-1">
+        <section class="view is-active" id="view-today" data-view="today" aria-labelledby="today-heading">
+          <div class="today-lead">
+            <div>
+              <p class="eyebrow" id="today-date">今天</p>
+              <h2 id="today-heading">把今天学扎实</h2>
+              <p class="lead-copy" id="today-greeting">正在整理你的学习数据。</p>
+            </div>
+            <button class="button button-primary" type="button" data-go-view="tutor">
+              进入辅导室
+              <span aria-hidden="true">→</span>
+            </button>
+          </div>
+
+          <div class="metric-row" aria-label="知识库概况">
+            <article class="metric-block">
+              <span class="metric-label">今日计划</span>
+              <strong id="metric-plan">0</strong>
+              <small>项待完成</small>
+            </article>
+            <article class="metric-block">
+              <span class="metric-label">待复盘错题</span>
+              <strong id="metric-mistakes">0</strong>
+              <small>道未归档</small>
+            </article>
+            <article class="metric-block">
+              <span class="metric-label">教材页</span>
+              <strong id="metric-pages">0</strong>
+              <small>页已建立索引</small>
+            </article>
+            <article class="metric-block">
+              <span class="metric-label">已记录掌握度</span>
+              <strong id="metric-mastery">0</strong>
+              <small>个知识点</small>
+            </article>
+          </div>
+
+          <div class="today-grid">
+            <article class="panel plan-panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">按节奏推进</p>
+                  <h3>今日安排</h3>
+                </div>
+                <span class="subtle" id="plan-duration"></span>
+              </div>
+              <div class="task-list" id="today-plan" aria-live="polite"></div>
+            </article>
+
+            <aside class="panel notebook-panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">优先补强</p>
+                  <h3>薄弱知识点</h3>
+                </div>
+              </div>
+              <div id="weak-topics" class="topic-list"></div>
+              <div class="rule-note">
+                <span aria-hidden="true">※</span>
+                <p>掌握度会结合正确率和提示等级更新。独立答对的权重更高。</p>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="view tutor-view" id="view-tutor" data-view="tutor" aria-labelledby="tutor-heading" hidden>
+          <div class="tutor-layout">
+            <aside class="session-panel" aria-labelledby="session-heading">
+              <div class="session-heading">
+                <div>
+                  <p class="eyebrow">保存在本机</p>
+                  <h3 id="session-heading">最近对话</h3>
+                </div>
+                <span class="count-badge" id="session-count" aria-label="会话数量">0</span>
+              </div>
+              <div class="session-feedback" id="session-feedback" role="status">正在读取对话记录</div>
+              <div class="session-list" id="session-list" aria-live="polite" aria-busy="true"></div>
+              <p class="session-privacy">历史记录保存在本机。模型模式会把最近对话发送给已配置的模型服务。</p>
+            </aside>
+
+            <article class="chat-panel">
+              <div class="chat-heading">
+                <div>
+                  <p class="eyebrow">循序提示</p>
+                  <h2 id="tutor-heading">一对一辅导室</h2>
+                </div>
+                <button class="text-button" id="new-session-button" type="button">新对话</button>
+              </div>
+
+              <div class="chat-log" id="chat-log" role="log" aria-live="polite" aria-relevant="additions text">
+                <article class="message message-assistant">
+                  <div class="message-author"><span class="tutor-seal" aria-hidden="true">辅</span> 数学辅导员</div>
+                  <div class="message-body">
+                    <p>把题目、你的思路和卡住的位置发给我。我会先定位教材，再按你选择的提示等级引导。</p>
+                  </div>
+                </article>
+              </div>
+
+              <div class="starter-row" id="starter-row" aria-label="示例问题">
+                <button type="button" data-starter="泰勒公式什么时候用？它和中值定理有什么联系？">泰勒公式与中值定理</button>
+                <button type="button" data-starter="二重积分怎么判断并交换积分次序？">二重积分换序</button>
+                <button type="button" data-starter="全概率公式和贝叶斯公式该如何区分？">全概率与贝叶斯</button>
+              </div>
+
+              <form class="composer" id="chat-form">
+                <div class="hint-control">
+                  <span id="hint-label">提示等级</span>
+                  <div class="segment-control" role="radiogroup" aria-labelledby="hint-label">
+                    <label title="只给方向，不给答案">
+                      <input type="radio" name="hint-level" value="1" checked>
+                      <span>1 方向</span>
+                    </label>
+                    <label title="给关键公式和中间步骤">
+                      <input type="radio" name="hint-level" value="2">
+                      <span>2 关键步</span>
+                    </label>
+                    <label title="给完整讲解和核查路径">
+                      <input type="radio" name="hint-level" value="3">
+                      <span>3 完整</span>
+                    </label>
+                  </div>
+                  <span class="hint-description" id="hint-description">只给方向，保留独立思考空间</span>
+                </div>
+                <label class="sr-only" for="chat-input">输入题目或问题</label>
+                <div class="composer-input">
+                  <textarea id="chat-input" name="message" rows="3" maxlength="6000" placeholder="粘贴题目，或描述你卡住的步骤" required></textarea>
+                  <button class="send-button" id="send-button" type="submit">
+                    <span>发送</span>
+                    <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m5 12 14-8-4 16-3-6zM5 12h7"/></svg>
+                  </button>
+                </div>
+                <div class="composer-foot">
+                  <span id="composer-mode">回答会附教材定位</span>
+                  <span><kbd>Ctrl</kbd> + <kbd>Enter</kbd> 发送</span>
+                </div>
+              </form>
+            </article>
+
+            <aside class="source-panel" aria-labelledby="source-heading">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">可核查证据</p>
+                  <h3 id="source-heading">本轮引用</h3>
+                </div>
+                <span class="count-badge" id="source-count">0</span>
+              </div>
+              <div id="source-list" class="source-list">
+                <div class="empty-state compact">
+                  <span class="empty-symbol" aria-hidden="true">⌁</span>
+                  <p>提问后，这里会显示教材页、摘录和原页图片。</p>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="view" id="view-knowledge" data-view="knowledge" aria-labelledby="knowledge-heading" hidden>
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">检索与核查</p>
+              <h2 id="knowledge-heading">知识库</h2>
+              <p>从知识点关系出发，最终回到教材原页核查。</p>
+            </div>
+          </div>
+
+          <form class="search-bar" id="knowledge-search-form" role="search">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></svg>
+            <label class="sr-only" for="knowledge-search">检索知识库</label>
+            <input id="knowledge-search" name="query" type="search" maxlength="180" placeholder="搜索概念、方法或题型，例如：变限积分">
+            <button class="button button-primary" type="submit">检索</button>
+          </form>
+
+          <div class="filter-row" aria-label="知识库类型筛选">
+            <button class="filter-chip is-active" type="button" data-catalog-filter="all" aria-pressed="true">全部</button>
+            <button class="filter-chip" type="button" data-catalog-filter="knowledge_candidate" aria-pressed="false">知识点</button>
+            <button class="filter-chip" type="button" data-catalog-filter="method_candidate" aria-pressed="false">解题方法</button>
+          </div>
+
+          <div class="knowledge-layout">
+            <div>
+              <div class="results-heading">
+                <h3 id="knowledge-result-title">知识目录</h3>
+                <span id="knowledge-result-count">0 项</span>
+              </div>
+              <div class="catalog-grid" id="catalog-list" aria-live="polite"></div>
+            </div>
+            <aside class="knowledge-note">
+              <p class="annotation-label">阅读说明</p>
+              <h3>两层证据，不混用</h3>
+              <dl>
+                <div>
+                  <dt><span class="evidence-dot evidence-ocr"></span>教材依据</dt>
+                  <dd>来自课程笔记中的 OCR 教材页，可查看页码与原图。</dd>
+                </div>
+                <div>
+                  <dt><span class="evidence-dot evidence-route"></span>关联线索</dt>
+                  <dd>知识点和方法候选页，用于导航，不替代教材正文。</dd>
+                </div>
+              </dl>
+            </aside>
+          </div>
+        </section>
+
+        <section class="view" id="view-mistakes" data-view="mistakes" aria-labelledby="mistakes-heading" hidden>
+          <div class="section-heading row-heading">
+            <div>
+              <p class="eyebrow">从失分到会做</p>
+              <h2 id="mistakes-heading">错题本</h2>
+              <p>记录错误原因，在合适的时间重新作答。</p>
+            </div>
+            <button class="button button-primary" id="open-mistake-dialog" type="button">记录错题</button>
+          </div>
+
+          <div class="filter-row" aria-label="错题状态筛选">
+            <button class="filter-chip is-active" type="button" data-mistake-filter="all" aria-pressed="true">全部</button>
+            <button class="filter-chip" type="button" data-mistake-filter="active" aria-pressed="false">待复盘</button>
+            <button class="filter-chip" type="button" data-mistake-filter="reviewing" aria-pressed="false">复盘中</button>
+            <button class="filter-chip" type="button" data-mistake-filter="resolved" aria-pressed="false">已掌握</button>
+          </div>
+
+          <div class="mistake-list" id="mistake-list" aria-live="polite"></div>
+        </section>
+
+        <section class="view" id="view-profile" data-view="profile" aria-labelledby="profile-heading" hidden>
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">目标与节奏</p>
+              <h2 id="profile-heading">学习档案</h2>
+              <p>档案只保存在本机，用于调整提示力度和复习计划。</p>
+            </div>
+          </div>
+
+          <div class="profile-layout">
+            <form class="panel profile-form" id="profile-form">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">基础信息</p>
+                  <h3>备考目标</h3>
+                </div>
+              </div>
+              <div class="form-grid">
+                <label>
+                  <span>称呼</span>
+                  <input name="name" type="text" maxlength="40" autocomplete="name" placeholder="怎么称呼你">
+                </label>
+                <label>
+                  <span>考试类型</span>
+                  <select name="examType">
+                    <option value="数学一">数学一</option>
+                    <option value="数学二">数学二</option>
+                    <option value="数学三">数学三</option>
+                  </select>
+                </label>
+                <label>
+                  <span>目标分数</span>
+                  <input name="targetScore" type="number" min="0" max="150" step="1" placeholder="例如 120">
+                </label>
+                <label>
+                  <span>考试日期</span>
+                  <input name="examDate" type="date">
+                </label>
+                <label>
+                  <span>每日数学时长</span>
+                  <div class="input-suffix"><input name="dailyMinutes" type="number" min="15" max="600" step="5" placeholder="90"><span>分钟</span></div>
+                </label>
+              </div>
+              <p class="privacy-note">保存后，七日计划会按考试日期、每日可用时长、错题和掌握度自动调整。</p>
+              <div class="form-actions">
+                <span class="form-status" id="profile-status" role="status"></span>
+                <button class="button button-primary" type="submit">保存档案</button>
+              </div>
+            </form>
+
+            <aside class="panel system-panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">运行状态</p>
+                  <h3>本地系统</h3>
+                </div>
+              </div>
+              <dl class="system-list">
+                <div><dt>辅导模式</dt><dd id="system-mode">读取中</dd></div>
+                <div><dt>当前模型</dt><dd id="system-model">未配置</dd></div>
+                <div><dt>Markdown 文件</dt><dd id="system-files">0</dd></div>
+                <div><dt>检索分块</dt><dd id="system-chunks">0</dd></div>
+                <div><dt>教材 OCR 页</dt><dd id="system-pages">0</dd></div>
+              </dl>
+              <p class="privacy-note">浏览器不会接收 API Key。模型凭据只由本地服务读取；未配置时仍可使用检索辅导。</p>
+            </aside>
+          </div>
+
+          <article class="mastery-section">
+            <div class="results-heading">
+              <div>
+                <p class="eyebrow">学习轨迹</p>
+                <h3>掌握度记录</h3>
+              </div>
+              <span id="mastery-count">0 项</span>
+            </div>
+            <div class="mastery-list" id="mastery-list"></div>
+          </article>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <nav class="mobile-nav" aria-label="移动端主导航">
+    <button class="is-active" type="button" data-view-target="today" aria-current="page"><span aria-hidden="true">今</span><small>今日</small></button>
+    <button type="button" data-view-target="tutor"><span aria-hidden="true">问</span><small>辅导</small></button>
+    <button type="button" data-view-target="knowledge"><span aria-hidden="true">知</span><small>知识库</small></button>
+    <button type="button" data-view-target="mistakes"><span aria-hidden="true">错</span><small>错题</small></button>
+    <button type="button" data-view-target="profile"><span aria-hidden="true">档</span><small>档案</small></button>
+  </nav>
+
+  <dialog class="dialog" id="mistake-dialog" aria-labelledby="mistake-dialog-title">
+    <form method="dialog" class="dialog-shell" id="mistake-form">
+      <div class="dialog-heading">
+        <div>
+          <p class="eyebrow">建立复盘闭环</p>
+          <h2 id="mistake-dialog-title">记录一道错题</h2>
+        </div>
+        <button class="icon-button" value="cancel" type="submit" aria-label="关闭">×</button>
+      </div>
+      <label class="full-field">
+        <span>题目或题意</span>
+        <textarea name="question" rows="4" maxlength="3000" required placeholder="粘贴题目，至少写清已知条件和所求"></textarea>
+      </label>
+      <div class="form-grid">
+        <label>
+          <span>关联知识点</span>
+          <select name="knowledgeId" id="mistake-knowledge-select"><option value="">暂不归类</option></select>
+        </label>
+        <label>
+          <span>错误类型</span>
+          <select name="errorType">
+            <option value="概念不清">概念不清</option>
+            <option value="思路中断">思路中断</option>
+            <option value="计算失误">计算失误</option>
+            <option value="条件遗漏">条件遗漏</option>
+            <option value="时间不足">时间不足</option>
+          </select>
+        </label>
+      </div>
+      <label class="full-field">
+        <span>我的作答</span>
+        <textarea name="userAnswer" rows="3" maxlength="2000" placeholder="记录当时的思路或关键步骤"></textarea>
+      </label>
+      <label class="full-field">
+        <span>原因分析</span>
+        <textarea name="analysis" rows="3" maxlength="1200" placeholder="为什么会错，下次看到什么信号要警觉"></textarea>
+      </label>
+      <div class="dialog-actions">
+        <button class="button button-secondary" value="cancel" type="submit">取消</button>
+        <button class="button button-primary" value="save" type="submit">保存错题</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toast-region" id="toast-region" aria-live="polite" aria-atomic="true"></div>
+  <div class="sr-only" id="app-live-region" aria-live="polite"></div>
+</body>
+</html>

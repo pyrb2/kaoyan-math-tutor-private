@@ -1,0 +1,16 @@
+{
+  "name": "kaoyan-math-tutor",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "start": "node src/server.mjs",
+    "dev": "node --watch src/server.mjs",
+    "test": "node --test --test-concurrency=1",
+    "check": "node scripts/check-vault.mjs",
+    "smoke": "node scripts/smoke.mjs"
+  }
+}
